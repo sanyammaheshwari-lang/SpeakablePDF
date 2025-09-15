@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<title>ऋण कलेक्शन नोटिस</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+  .doc { max-width: 700px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+  button { margin: 5px 5px; padding: 8px 12px; font-size: 14px; border: none; border-radius: 6px; cursor: pointer; }
+  #playBtn { background-color: #4CAF50; color: white; }
+  #pauseBtn { background-color: #FF9800; color: white; }
+  #stopBtn { background-color: #F44336; color: white; }
+  #progress { width: 100%; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="doc">
+  <h2>ऋण कलेक्शन नोटिस</h2>
+  <p>प्रति: श्री संयम<br>ऋण खाता संख्या: 12345</p>
+  <p><strong>विषय:</strong> अत्यावश्यक अनुस्मारक – बकाया ऋण राशि ₹50,000 का भुगतान (80 दिन विलंबित)</p>
+  <p>प्रिय श्री महेश्वरी,</p>
+  <p>हमें आपका ध्यान इस ओर आकर्षित करना है कि आपने ऋण खाता संख्या 12345 के तहत ₹50,000 का ऋण लिया था। हमारे रिकॉर्ड के अनुसार, इस ऋण की अदायगी 80 दिन से विलंबित है।</p>
+  <p>ऋण की समय पर अदायगी आपके वित्तीय प्रतिष्ठान को बनाए रखने के लिए अत्यंत आवश्यक है। बार-बार अनुस्मारक और फॉलो-अप के बावजूद, आपका खाता अब भी बकाया राशि दर्शा रहा है, जो कि गंभीर चिंता का विषय है। लंबा विलंब न केवल आपके क्रेडिट प्रोफ़ाइल को प्रभावित करता है, बल्कि ऋण समझौते के अनुसार अतिरिक्त ब्याज, दंड और विलंब शुल्क भी लागू होते हैं।</p>
+  <p>हमें जोर देकर कहना चाहिए कि यदि आप बकाया राशि का भुगतान जारी नहीं रखते हैं, तो हमें कलेक्शन की कार्रवाई शुरू करने के लिए बाध्य होना पड़ेगा, जिसमें शामिल हो सकते हैं:
+    <ul>
+      <li>डिफ़ॉल्ट की जानकारी क्रेडिट ब्यूरो को देना, जिससे आपके क्रेडिट स्कोर पर नकारात्मक प्रभाव पड़े।</li>
+      <li>बकाया राशि की वसूली के लिए कानूनी कार्रवाई शुरू करना।</li>
+      <li>मामले को अधिकृत कलेक्शन एजेंसियों के पास बढ़ाना, जैसा कि कानून अनुमति देता है।</li>
+    </ul>
+  </p>
+  <p>हम आपको दृढ़ता से सलाह देते हैं कि आप तत्काल कार्रवाई करें और बकाया राशि का भुगतान सुनिश्चित करें। यदि आप वास्तविक वित्तीय कठिनाइयों का सामना कर रहे हैं, तो हमारी कलेक्शन टीम से तुरंत संपर्क करें, ताकि हम भुगतान समाधान या पुनर्संरचना विकल्पों पर विचार कर सकें।</p>
+  <p>यदि आप इस नोटिस का उत्तर प्राप्ति की तारीख से 7 दिनों के भीतर नहीं देते हैं, तो हमें आवश्यक कलेक्शन उपाय अपनाने के अलावा कोई विकल्प नहीं रहेगा।</p>
+  <p>कृपया इस संचार को गंभीरता से लें और शीघ्र कार्रवाई करें, ताकि आगे की कठिनाइयों से बचा जा सके।</p>
+  <p>सादर,<br>कलेक्शन विभाग</p>
+
+  <div>
+    <audio id="ttsAudio" src="loan_notice.mp3"></audio>
+    <button id="playBtn">▶️ Play</button>
+    <button id="pauseBtn">⏸️ Pause</button>
+    <button id="stopBtn">⏹️ Stop</button>
+    <input type="range" id="progress" min="0" max="100" value="0">
+  </div>
+</div>
+
+<script>
+const audio = document.getElementById("ttsAudio");
+const progress = document.getElementById("progress");
+const playBtn = document.getElementById("playBtn");
+const pauseBtn = document.getElementById("pauseBtn");
+const stopBtn = document.getElementById("stopBtn");
+
+// Play
+playBtn.addEventListener("click", () => audio.play());
+
+// Pause
+pauseBtn.addEventListener("click", () => audio.pause());
+
+// Stop
+stopBtn.addEventListener("click", () => {
+  audio.pause();
+  audio.currentTime = 0;
+});
+
+// Update slider smoothly
+audio.addEventListener("timeupdate", () => {
+  if (!progress.dragging) {
+    progress.value = (audio.currentTime / audio.duration) * 100;
+  }
+});
+
+// Drag to jump
+progress.addEventListener("mousedown", () => progress.dragging = true);
+progress.addEventListener("mouseup", (e) => {
+  progress.dragging = false;
+  audio.currentTime = (progress.value / 100) * audio.duration;
+});
+progress.addEventListener("input", () => {
+  if(progress.dragging){
+    audio.currentTime = (progress.value / 100) * audio.duration;
+  }
+});
+
+// Auto-play on load
+window.onload = () => {
+  audio.play().catch(()=>{console.log("Auto-play blocked, click play")});
+};
+</script>
+
+</body>
+</html>
